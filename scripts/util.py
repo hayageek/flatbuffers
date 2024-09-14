@@ -16,6 +16,7 @@ import argparse
 import platform
 import subprocess
 from pathlib import Path
+from security import safe_command
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -67,4 +68,4 @@ def flatc(options, schema, prefix=None, include=None, data=None, cwd=tests_path)
     cmd += [schema] if isinstance(schema, str) else schema
     if data:
         cmd += [data] if isinstance(data, str) else data
-    result = subprocess.run(cmd, cwd=str(cwd), check=True)
+    result = safe_command.run(subprocess.run, cmd, cwd=str(cwd), check=True)

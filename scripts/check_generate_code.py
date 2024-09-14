@@ -18,6 +18,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
+from security import safe_command
 
 # Get the path where this script is located so we can invoke the script from
 # any directory and have the paths work correctly.
@@ -44,7 +45,7 @@ if result.returncode != 0:
 gen_cmd = ["scripts/generate_code.py"] + sys.argv[1:]
 if platform.system() == "Windows":
     gen_cmd = ["py"] + gen_cmd
-subprocess.run(gen_cmd, cwd=root_path)
+safe_command.run(subprocess.run, gen_cmd, cwd=root_path)
 
 result = subprocess.run(["git", "diff", "--quiet", "--ignore-cr-at-eol"], cwd=root_path)
 
