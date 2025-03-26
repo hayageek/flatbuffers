@@ -21,6 +21,7 @@ import subprocess
 import generate_grpc_examples
 from pathlib import Path
 from util import flatc, root_path, tests_path, args, flatc_path
+from security import safe_command
 
 # Specify the other paths that will be referenced
 swift_code_gen = Path(root_path, "tests/swift/tests/CodeGenerationTests")
@@ -52,7 +53,7 @@ def flatc_annotate(schema, file, include=None, cwd=tests_path):
     if include:
         cmd += ["-I"] + [include]
     cmd += ["--annotate", schema, file]
-    result = subprocess.run(cmd, cwd=str(cwd), check=True)
+    result = safe_command.run(subprocess.run, cmd, cwd=str(cwd), check=True)
 
 
 # Glob a pattern relative to file path
@@ -549,7 +550,7 @@ def flatc_annotate(schema, include=None, data=None, cwd=tests_path):
     cmd += ["--annotate", schema]
     if data:
         cmd += [data] if isinstance(data, str) else data
-    subprocess.run(cmd, cwd=str(cwd), check=True)
+    safe_command.run(subprocess.run, cmd, cwd=str(cwd), check=True)
 
 
 flatc_annotate(
